@@ -28,6 +28,7 @@ class LicenseRepository(private val context: Context) {
         val SEX = stringPreferencesKey("sex")
         val ADDRESS_STREET = stringPreferencesKey("address_street")
         val ADDRESS_CSZ = stringPreferencesKey("address_csz")
+        val PHOTO_PATH = stringPreferencesKey("photo_path")
     }
 
     val licenseFlow: Flow<IdentityLicense> = context.dataStore.data.map { prefs ->
@@ -44,7 +45,8 @@ class LicenseRepository(private val context: Context) {
             eyes = prefs[Keys.EYES] ?: "",
             sex = prefs[Keys.SEX] ?: "",
             addressStreet = prefs[Keys.ADDRESS_STREET] ?: "",
-            addressCityStateZip = prefs[Keys.ADDRESS_CSZ] ?: ""
+            addressCityStateZip = prefs[Keys.ADDRESS_CSZ] ?: "",
+            photoPath = prefs[Keys.PHOTO_PATH] ?: ""
         )
     }
 
@@ -63,6 +65,7 @@ class LicenseRepository(private val context: Context) {
             prefs[Keys.SEX] = data.sex
             prefs[Keys.ADDRESS_STREET] = data.addressStreet
             prefs[Keys.ADDRESS_CSZ] = data.addressCityStateZip
+            prefs[Keys.PHOTO_PATH] = data.photoPath
         }
     }
 }
