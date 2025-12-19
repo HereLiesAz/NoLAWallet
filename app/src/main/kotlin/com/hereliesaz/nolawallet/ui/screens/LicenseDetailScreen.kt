@@ -1,5 +1,8 @@
 package com.hereliesaz.nolawallet.ui.screens
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -30,10 +33,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,6 +55,9 @@ import com.hereliesaz.nolawallet.ui.theme.StateBlue
 import com.hereliesaz.nolawallet.ui.theme.TextBlack
 import com.hereliesaz.nolawallet.ui.theme.TextWhite
 import com.hereliesaz.nolawallet.viewmodel.WalletViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,6 +69,24 @@ fun LicenseDetailScreen(
     val data = viewModel.licenseData
     val fullName = if (data.firstName.isEmpty()) "JEFFREY AZRIENOCH SMITH-LUEDKE" else "${data.firstName} ${data.lastName}"
     val licenseNo = if (data.licenseNumber.isEmpty()) "012033589" else data.licenseNumber
+
+    // Bitmap Loader
+    var licensePhoto by remember { mutableStateOf<Bitmap?>(null) }
+    
+    LaunchedEffect(data.photoPath) {
+        if (data.photoPath.isNotEmpty()) {
+            withContext(Dispatchers.IO) {
+                try {
+                    val file = File(data.photoPath)
+                    if (file.exists()) {
+                        licensePhoto = BitmapFactory.decodeFile(file.absolutePath)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -77,18 +108,30 @@ fun LicenseDetailScreen(
                 .verticalScroll(rememberScrollState())
                 .background(Color.White)
         ) {
-            // Visual
+            // Visual Area
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(450.dp)
+                    .height(450.dp) // Maintain aspect ratio of a real license usually
                     .background(LightGrey),
                 contentAlignment = Alignment.Center
             ) {
-                Text("[Full License Image Render]", color = Color.Gray, textAlign = TextAlign.Center)
+                if (licensePhoto != null) {
+                    Image(
+                        bitmap = licensePhoto!!.asImageBitmap(),
+                        contentDescription = "License Photo",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    
+                    // Optional: Add the Blue overlay from the real app if desired, 
+                    // but usually the detail screen shows the clear image.
+                } else {
+                    Text("[No Photo Configured]", color = Color.Gray, textAlign = TextAlign.Center)
+                }
             }
 
-            // Status
+            // Status Bar
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -104,7 +147,7 @@ fun LicenseDetailScreen(
                 }
             }
 
-            // Name
+            // Name and Age
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
