@@ -1,7 +1,7 @@
 package com.hereliesaz.nolawallet.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,43 +25,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hereliesaz.nolawallet.R
-import com.hereliesaz.nolawallet.ui.theme.GoldAccent
 import com.hereliesaz.nolawallet.ui.theme.StateBlue
 import com.hereliesaz.nolawallet.ui.theme.TextWhite
 
 @Composable
-fun OnboardingScreen() {
+fun OnboardingScreen(
+    onLogin: () -> Unit
+) {
     Scaffold { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // 1. The Stock Photo Background
-            // In a real app, this is the woman in the car.
-            // We simulate it with a placeholder box.
+            // Background Placeholder
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(400.dp) // Covers top half
-                    .background(Color.Gray) // Placeholder for image
-            ) {
-                // Image(
-                //    painter = painterResource(id = R.drawable.woman_in_car),
-                //    contentDescription = "Happy Citizen",
-                //    contentScale = ContentScale.Crop,
-                //    modifier = Modifier.fillMaxSize()
-                // )
-            }
+                    .height(400.dp)
+                    .background(Color.Gray)
+            )
 
-            // 2. The Gradient Overlay (Transition to Blue)
+            // Gradient Overlay
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -77,7 +66,7 @@ fun OnboardingScreen() {
                     )
             )
 
-            // 3. Content Layer
+            // Content
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -85,22 +74,19 @@ fun OnboardingScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom
             ) {
-                // The Logo
+                // Logo Placeholder
                 Box(
                     modifier = Modifier
                         .size(100.dp)
                         .clip(CircleShape)
                         .background(StateBlue)
-                        .border(2.dp, TextWhite, CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    // Icon(painter = painterResource(id = R.drawable.ic_la_map), tint = GoldAccent)
-                }
+                        .border(2.dp, TextWhite, CircleShape)
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "Welcome to LA Wallet",
+                    text = "Welcome to NOLA Wallet",
                     color = TextWhite,
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold
@@ -109,7 +95,7 @@ fun OnboardingScreen() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = "Use LA Wallet as your legally-recognized Louisiana Digital Driver's License.",
+                    text = "Use NOLA Wallet as your legally-recognized Louisiana Digital Driver's License.",
                     color = TextWhite.copy(alpha = 0.9f),
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
@@ -118,7 +104,7 @@ fun OnboardingScreen() {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Pagination Dots
+                // Dots
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.padding(bottom = 32.dp)
@@ -130,15 +116,10 @@ fun OnboardingScreen() {
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Buttons
                 Button(
-                    onClick = { /* Create Account */ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF2196F3) // Brighter blue button
-                    ),
+                    onClick = { /* Create Account Logic */ },
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
                     shape = RoundedCornerShape(4.dp)
                 ) {
                     Text("CREATE AN ACCOUNT", fontWeight = FontWeight.SemiBold)
@@ -147,10 +128,8 @@ fun OnboardingScreen() {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedButton(
-                    onClick = { /* Login */ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
+                    onClick = onLogin,
+                    modifier = Modifier.fillMaxWidth().height(50.dp),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = TextWhite),
                     border = androidx.compose.foundation.BorderStroke(1.dp, TextWhite),
                     shape = RoundedCornerShape(4.dp)
