@@ -16,3 +16,6 @@ val VehicleBlue = Color(0xFF42A5F5)
 val HealthGrey = Color(0xFFEEEEEE)
 val LicenseGreen = Color(0xFF7CB342) // LDWF Green
 val TsaBlue = Color(0xFF1565C0)
+// The specific studio blue background for the ID photo
+// This is a muted, slightly greyish-blue common in official photos.
+val LicensePhotoBackgroundBlue = Color(0xFF8FA4B8)
