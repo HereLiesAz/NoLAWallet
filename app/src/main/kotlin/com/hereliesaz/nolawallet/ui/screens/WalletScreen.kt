@@ -1,60 +1,22 @@
 package com.hereliesaz.nolawallet.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.* // Import all
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DirectionsCar
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LocalHospital
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.* // Import all
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.hereliesaz.nolawallet.ui.theme.HandgunGold
-import com.hereliesaz.nolawallet.ui.theme.HealthGrey
-import com.hereliesaz.nolawallet.ui.theme.LicenseGreen
-import com.hereliesaz.nolawallet.ui.theme.LicenseOverlayBlue
+import coil.compose.rememberAsyncImagePainter
+import com.hereliesaz.nolawallet.R
 import com.hereliesaz.nolawallet.ui.theme.StateBlue
-import com.hereliesaz.nolawallet.ui.theme.TextBlack
-import com.hereliesaz.nolawallet.ui.theme.TextWhite
-import com.hereliesaz.nolawallet.ui.theme.TsaBlue
-import com.hereliesaz.nolawallet.ui.theme.VehicleBlue
 import com.hereliesaz.nolawallet.viewmodel.WalletViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,19 +30,14 @@ fun WalletScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.pointerInput(Unit) {
-                            detectTapGestures(
-                                onLongPress = { onSecretTrigger() }
-                            )
-                        }
-                    ) {
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "NOLA Wallet",
-                            color = TextWhite,
-                            fontWeight = FontWeight.Bold
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        // Using the official title asset
+                        Image(
+                            painter = rememberAsyncImagePainter(model = "file:///android_res/drawable/hometitle.png"),
+                            contentDescription = "NOLA Wallet",
+                            modifier = Modifier
+                                .height(24.dp)
+                                .clickable { onSecretTrigger() } // Secret Trigger moved to logo click
                         )
                     }
                 },
@@ -88,11 +45,13 @@ fun WalletScreen(
             )
         },
         bottomBar = {
-            BottomAppBar(containerColor = StateBlue, contentColor = TextWhite) {
-                BottomNavItem("Home", Icons.Default.Home, true)
-                BottomNavItem("Share", Icons.Default.Share, false)
-                BottomNavItem("Scan", Icons.Default.QrCodeScanner, false)
-                BottomNavItem("Menu", Icons.Default.Menu, false)
+            BottomAppBar(containerColor = StateBlue, contentColor = Color.White) {
+                // Using specific drawable assets for nav
+                // Note: You need to ensure these PNGs are in res/drawable with these names
+                BottomNavImageItem("Home", "tabhome", true)
+                BottomNavImageItem("Verify", "tabverifyyou", false)
+                BottomNavImageItem("Scan", "tabscan", false)
+                BottomNavImageItem("Settings", "tabsettings", false) // Assuming settings icon exists
             }
         }
     ) { paddingValues ->
@@ -101,100 +60,78 @@ fun WalletScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .background(StateBlue)
-                .verticalScroll(rememberScrollState())
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp) // increased spacing
         ) {
-            // Cards
-            WalletItemCard("Concealed Handgun Permit", Icons.Default.Shield, HandgunGold, TextBlack)
-            WalletItemCard("My Vehicles", Icons.Default.DirectionsCar, VehicleBlue, TextWhite)
-            WalletItemCard("Medicaid Health Plan Card", Icons.Default.LocalHospital, HealthGrey, TextBlack)
-            WalletItemCard("Vaccination Card", Icons.Default.LocalHospital, TextWhite, TextBlack)
-            WalletItemCard("LDWF Licenses", Icons.Default.Shield, LicenseGreen, TextWhite)
-            WalletItemCard("Share mDL with TSA", Icons.Default.Shield, TsaBlue, TextWhite)
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            LicensePreviewCard(onCardClick, viewModel)
-        }
-    }
-}
-
-@Composable
-fun WalletItemCard(text: String, icon: ImageVector, backgroundColor: Color, textColor: Color) {
-    Card(
-        modifier = Modifier.fillMaxWidth().height(56.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(icon, null, tint = textColor, modifier = Modifier.size(24.dp))
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(text, color = textColor, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
-        }
-    }
-}
-
-@Composable
-fun LicensePreviewCard(onClick: () -> Unit, viewModel: WalletViewModel) {
-    val data = viewModel.licenseData
-    val displayName = if(data.lastName.isNotEmpty()) "${data.lastName}, ${data.firstName}" else "TAP TO VIEW"
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(240.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color.White)
-            .clickable { onClick() }
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(LicenseOverlayBlue.copy(alpha = 0.8f)),
-            contentAlignment = Alignment.Center
-        ) {
-             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                 Text(
-                     text = "Tap to View",
-                     color = TextWhite,
-                     fontWeight = FontWeight.Bold,
-                     fontSize = 20.sp
-                 )
-             }
-        }
-        
-        // Dynamic Data overlay (if set)
-        if (data.lastName.isNotEmpty()) {
-            Column(
-                modifier = Modifier.align(Alignment.BottomStart).padding(16.dp)
+            // The Licenses Card
+            // We use the 'licenseback.png' from resources
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(220.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable { onCardClick() }
             ) {
-                Text(displayName, color = TextWhite.copy(alpha = 0.7f), fontSize = 12.sp)
+                Image(
+                    painter = rememberAsyncImagePainter(model = "file:///android_res/drawable/licenseback.png"),
+                    contentDescription = null,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.fillMaxSize()
+                )
+                
+                // Status Overlay (Valid)
+                Image(
+                    painter = rememberAsyncImagePainter(model = "file:///android_res/drawable/verifyyouvalid.png"),
+                    contentDescription = "Valid",
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(12.dp)
+                        .size(80.dp, 30.dp) // Adjust based on asset aspect ratio
+                )
+                
+                // User Name Overlay
+                Text(
+                    text = viewModel.licenseData.firstName + " " + viewModel.licenseData.lastName,
+                    color = Color.White,
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(16.dp)
+                )
+            }
+
+            // Wildlife / Hunting License
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.White) // Fallback
+            ) {
+                 Image(
+                    painter = rememberAsyncImagePainter(model = "file:///android_res/drawable/wildlifelogo.png"),
+                    contentDescription = "Wildlife",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.align(Alignment.CenterStart).padding(16.dp)
+                )
+                // Text details...
             }
         }
     }
 }
 
 @Composable
-fun androidx.compose.foundation.layout.RowScope.BottomNavItem(
-    label: String,
-    icon: ImageVector,
-    selected: Boolean
-) {
+fun RowScope.BottomNavImageItem(label: String, resourceName: String, selected: Boolean) {
     NavigationBarItem(
         selected = selected,
-        onClick = { },
-        icon = { Icon(icon, contentDescription = label) },
-        label = { Text(label) },
-        colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = TextWhite,
-            unselectedIconColor = TextWhite.copy(alpha = 0.6f),
-            selectedTextColor = TextWhite,
-            unselectedTextColor = TextWhite.copy(alpha = 0.6f),
-            indicatorColor = StateBlue
-        )
+        onClick = {},
+        icon = {
+            Image(
+                painter = rememberAsyncImagePainter(model = "file:///android_res/drawable/$resourceName.png"),
+                contentDescription = label,
+                modifier = Modifier.size(28.dp),
+                alpha = if (selected) 1f else 0.6f
+            )
+        },
+        colors = NavigationBarItemDefaults.colors(indicatorColor = Color.Transparent)
     )
 }
