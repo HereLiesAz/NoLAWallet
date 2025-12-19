@@ -22,7 +22,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,16 +44,25 @@ import com.hereliesaz.nolawallet.ui.theme.LightGrey
 import com.hereliesaz.nolawallet.ui.theme.StateBlue
 import com.hereliesaz.nolawallet.ui.theme.TextBlack
 import com.hereliesaz.nolawallet.ui.theme.TextWhite
+import com.hereliesaz.nolawallet.viewmodel.WalletViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LicenseDetailScreen() {
+fun LicenseDetailScreen(
+    viewModel: WalletViewModel,
+    onShareClick: () -> Unit,
+    onBackClick: () -> Unit
+) {
+    val data = viewModel.licenseData
+    val fullName = if (data.firstName.isEmpty()) "JEFFREY AZRIENOCH SMITH-LUEDKE" else "${data.firstName} ${data.lastName}"
+    val licenseNo = if (data.licenseNumber.isEmpty()) "012033589" else data.licenseNumber
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("License Details", color = TextWhite) },
                 navigationIcon = {
-                    IconButton(onClick = { /* Back */ }) {
+                    IconButton(onClick = onBackClick) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = TextWhite)
                     }
                 },
@@ -69,54 +77,34 @@ fun LicenseDetailScreen() {
                 .verticalScroll(rememberScrollState())
                 .background(Color.White)
         ) {
-            // 1. The License Visual
-            // In a real app, this is a complex dynamic image generation. 
-            // We substitute a container.
+            // Visual
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(450.dp) // Proportionate to the screenshot
+                    .height(450.dp)
                     .background(LightGrey),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "[Full License Image Render]",
-                    color = Color.Gray,
-                    textAlign = TextAlign.Center
-                )
+                Text("[Full License Image Render]", color = Color.Gray, textAlign = TextAlign.Center)
             }
 
-            // 2. Validation Status Bar
+            // Status
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFE8F5E9)) // Very light green bg
+                    .background(Color(0xFFE8F5E9))
                     .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.CheckCircle,
-                    contentDescription = "Valid",
-                    tint = LicenseGreen,
-                    modifier = Modifier.size(24.dp)
-                )
+                Icon(Icons.Default.CheckCircle, "Valid", tint = LicenseGreen, modifier = Modifier.size(24.dp))
                 Spacer(modifier = Modifier.width(8.dp))
                 Column {
-                    Text(
-                        text = "VALID",
-                        fontWeight = FontWeight.Bold,
-                        color = TextBlack,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "Last Updated: 14 seconds ago", // Mock time
-                        color = Color.Gray,
-                        fontSize = 11.sp
-                    )
+                    Text("VALID", fontWeight = FontWeight.Bold, color = TextBlack, fontSize = 14.sp)
+                    Text("Last Updated: Just now", color = Color.Gray, fontSize = 11.sp)
                 }
             }
 
-            // 3. Name and Age Badge
+            // Name
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -125,19 +113,10 @@ fun LicenseDetailScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column {
-                    Text(
-                        text = "JEFFREY AZRIENOCH SMITH-LUEDKE", // Data from screenshot
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "012033589",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Normal
-                    )
+                    Text(fullName, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                    Text(licenseNo, fontSize = 20.sp, fontWeight = FontWeight.Normal)
                 }
                 
-                // 21+ / 25+ Badge
                 Box(
                     modifier = Modifier
                         .size(36.dp)
@@ -145,25 +124,19 @@ fun LicenseDetailScreen() {
                         .background(LicenseGreen),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "25+",
-                        color = TextWhite,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Text("25+", color = TextWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 }
             }
 
-            // 4. Barcode Simulation
+            // Barcode
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
                     .padding(horizontal = 16.dp)
-                    .background(Color.Black), // PDF417 placeholder
+                    .background(Color.Black),
                 contentAlignment = Alignment.Center
             ) {
-                // In reality this is a high-density barcode
                 Row(modifier = Modifier.fillMaxSize()) {
                     repeat(60) {
                         Box(
@@ -178,15 +151,12 @@ fun LicenseDetailScreen() {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 5. Actions
+            // Actions
             Column(modifier = Modifier.padding(horizontal = 16.dp)) {
                 Button(
-                    onClick = { /* Purchase Logic */ },
+                    onClick = { },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White,
-                        contentColor = StateBlue
-                    ),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = StateBlue),
                     border = androidx.compose.foundation.BorderStroke(1.dp, StateBlue),
                     shape = RoundedCornerShape(24.dp)
                 ) {
@@ -196,7 +166,7 @@ fun LicenseDetailScreen() {
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 Button(
-                    onClick = { /* Share Logic */ },
+                    onClick = onShareClick,
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = StateBlue),
                     shape = RoundedCornerShape(24.dp)
@@ -207,19 +177,19 @@ fun LicenseDetailScreen() {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // 6. Data Fields List
-            DataFieldItem(label = "LICENSE / ID NUMBER", value = "012033589")
+            // Data Fields
+            DataFieldItem("LICENSE / ID NUMBER", licenseNo)
             Row {
-                DataFieldItem(label = "AUDIT", value = "7665", modifier = Modifier.weight(1f))
-                DataFieldItem(label = "DATE OF BIRTH", value = "Jul 03, 1983", modifier = Modifier.weight(1f))
+                DataFieldItem("AUDIT", data.auditNumber, Modifier.weight(1f))
+                DataFieldItem("DATE OF BIRTH", data.dob, Modifier.weight(1f))
             }
             Row {
-                DataFieldItem(label = "ISSUE DATE", value = "Dec 26, 2021", modifier = Modifier.weight(1f))
-                DataFieldItem(label = "EXPIRATION DATE", value = "Dec 27, 2025", modifier = Modifier.weight(1f))
+                DataFieldItem("ISSUE DATE", data.issueDate, Modifier.weight(1f))
+                DataFieldItem("EXPIRATION DATE", data.expiryDate, Modifier.weight(1f))
             }
-            DataFieldItem(label = "RESTRICTIONS", value = "None")
-            DataFieldItem(label = "ENDORSEMENTS", value = "None")
-            DataFieldItem(label = "CLASS", value = "E")
+            DataFieldItem("RESTRICTIONS", data.restrictions)
+            DataFieldItem("ENDORSEMENTS", data.endorsements)
+            DataFieldItem("CLASS", data.classType)
             
             Spacer(modifier = Modifier.height(40.dp))
         }
@@ -227,11 +197,7 @@ fun LicenseDetailScreen() {
 }
 
 @Composable
-fun DataFieldItem(
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier
-) {
+fun DataFieldItem(label: String, value: String, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -239,17 +205,8 @@ fun DataFieldItem(
             .border(1.dp, DividerGrey, RoundedCornerShape(4.dp))
             .padding(12.dp)
     ) {
-        Text(
-            text = label,
-            fontSize = 11.sp,
-            color = Color.Gray
-        )
+        Text(label, fontSize = 11.sp, color = Color.Gray)
         Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = value,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = TextBlack
-        )
+        Text(if (value.isEmpty()) "--" else value, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = TextBlack)
     }
 }
