@@ -28,7 +28,8 @@ data class IdentityLicense(
     val addressCityStateZip: String = "",
     val restrictions: String = "None",
     val endorsements: String = "None",
-    val classType: String = "E"
+    val classType: String = "E",
+    val photoPath: String = "" // The path to the stored image file
 )
 
 // Default empty state
