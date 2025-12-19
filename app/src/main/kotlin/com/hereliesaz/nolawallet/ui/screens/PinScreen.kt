@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,8 +30,9 @@ import com.hereliesaz.nolawallet.ui.theme.StateBlue
 import com.hereliesaz.nolawallet.ui.theme.TextWhite
 
 @Composable
-fun PinScreen() {
-    // We maintain the illusion of security with a local state list
+fun PinScreen(
+    onPinSuccess: () -> Unit
+) {
     val pinEntry = remember { mutableStateListOf<String>() }
     val maxPinLength = 4
 
@@ -58,18 +57,17 @@ fun PinScreen() {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // The empty circles of anticipation
             PinIndicators(entryLength = pinEntry.size)
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            // The Grid of Submission
             PinKeypad(
                 onNumberClick = { num ->
                     if (pinEntry.size < maxPinLength) {
                         pinEntry.add(num)
                         if (pinEntry.size == maxPinLength) {
-                            // TODO: Validate the arbitrary sequence
+                            // Instant success for simulation
+                            onPinSuccess()
                         }
                     }
                 },
@@ -88,12 +86,13 @@ fun PinScreen() {
                 fontSize = 14.sp,
                 modifier = Modifier
                     .padding(bottom = 48.dp)
-                    .clickable { /* Reset logic */ }
+                    .clickable { pinEntry.clear() }
             )
         }
     }
 }
 
+// Helper components reused from previous version
 @Composable
 fun PinIndicators(entryLength: Int) {
     Row(
@@ -104,81 +103,48 @@ fun PinIndicators(entryLength: Int) {
             val filled = i < entryLength
             Box(
                 modifier = Modifier
-                    .size(24.dp) // Screenshot circle size
+                    .size(24.dp)
                     .clip(CircleShape)
                     .border(1.5.dp, TextWhite, CircleShape)
-                    .then(
-                        if (filled) Modifier.padding(4.dp).border(8.dp, TextWhite, CircleShape) // Fill effect
-                        else Modifier
-                    )
+                    .then(if (filled) Modifier.padding(4.dp).border(8.dp, TextWhite, CircleShape) else Modifier)
             )
         }
     }
 }
 
 @Composable
-fun PinKeypad(
-    onNumberClick: (String) -> Unit,
-    onDeleteClick: () -> Unit
-) {
+fun PinKeypad(onNumberClick: (String) -> Unit, onDeleteClick: () -> Unit) {
     val keys = listOf(
         listOf("1", "2", "3"),
         listOf("4", "5", "6"),
         listOf("7", "8", "9"),
         listOf("", "0", "DEL")
     )
-
     Column(
         verticalArrangement = Arrangement.spacedBy(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         keys.forEach { row ->
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(32.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                row.forEach { key ->
-                    PinKey(key, onNumberClick, onDeleteClick)
-                }
+            Row(horizontalArrangement = Arrangement.spacedBy(32.dp)) {
+                row.forEach { key -> PinKey(key, onNumberClick, onDeleteClick) }
             }
         }
     }
 }
 
 @Composable
-fun PinKey(
-    key: String,
-    onNumberClick: (String) -> Unit,
-    onDeleteClick: () -> Unit
-) {
+fun PinKey(key: String, onNumberClick: (String) -> Unit, onDeleteClick: () -> Unit) {
     Box(
         modifier = Modifier
-            .size(80.dp) // Large touch targets
+            .size(80.dp)
             .clip(CircleShape)
-            .then(
-                if (key.isNotEmpty()) Modifier.border(1.dp, TextWhite.copy(alpha = 0.5f), CircleShape)
-                else Modifier
-            )
+            .then(if (key.isNotEmpty()) Modifier.border(1.dp, TextWhite.copy(alpha = 0.5f), CircleShape) else Modifier)
             .clickable(enabled = key.isNotEmpty()) {
-                if (key == "DEL") onDeleteClick()
-                else if (key.isNotEmpty()) onNumberClick(key)
+                if (key == "DEL") onDeleteClick() else if (key.isNotEmpty()) onNumberClick(key)
             },
         contentAlignment = Alignment.Center
     ) {
-        if (key == "DEL") {
-            Icon(
-                imageVector = Icons.Default.Close, // Using 'X' as per screenshot
-                contentDescription = "Delete",
-                tint = TextWhite,
-                modifier = Modifier.size(28.dp)
-            )
-        } else if (key.isNotEmpty()) {
-            Text(
-                text = key,
-                color = TextWhite,
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Normal
-            )
-        }
+        if (key == "DEL") Icon(Icons.Default.Close, contentDescription = "Delete", tint = TextWhite, modifier = Modifier.size(28.dp))
+        else if (key.isNotEmpty()) Text(text = key, color = TextWhite, fontSize = 28.sp)
     }
 }
