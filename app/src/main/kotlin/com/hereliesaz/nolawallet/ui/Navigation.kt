@@ -23,10 +23,11 @@ object Routes {
 }
 
 @Composable
-fun NolaNavigation() {
+@Composable
+fun NolaNavigation(viewModelFactory: androidx.lifecycle.ViewModelProvider.Factory) {
     val navController = rememberNavController()
-    // Create the ViewModel here so it survives navigation changes
-    val walletViewModel: WalletViewModel = viewModel()
+    // Use the factory to get the repository-backed ViewModel
+    val walletViewModel: WalletViewModel = viewModel(factory = viewModelFactory)
 
     NavHost(
         navController = navController,
