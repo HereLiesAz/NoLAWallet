@@ -9,11 +9,21 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-// The extension property to create the DataStore
+/**
+ * The extension property to create the DataStore.
+ */
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user_identity")
 
+/**
+ * A repository for managing license data.
+ *
+ * @param context The application context.
+ */
 class LicenseRepository(private val context: Context) {
 
+    /**
+     * The keys for the license data.
+     */
     private object Keys {
         val LICENSE_NO = stringPreferencesKey("license_no")
         val AUDIT_NO = stringPreferencesKey("audit_no")

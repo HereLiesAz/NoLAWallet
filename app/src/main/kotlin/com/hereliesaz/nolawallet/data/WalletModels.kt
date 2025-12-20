@@ -3,6 +3,16 @@ package com.hereliesaz.nolawallet.data
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 
+/**
+ * A data class that represents a wallet item.
+ *
+ * @param id The ID of the wallet item.
+ * @param title The title of the wallet item.
+ * @param icon The icon of the wallet item.
+ * @param backgroundColor The background color of the wallet item.
+ * @param contentColor The content color of the wallet item.
+ * @param isVerified Whether the wallet item is verified.
+ */
 data class WalletItem(
     val id: String,
     val title: String,
@@ -12,6 +22,11 @@ data class WalletItem(
     val isVerified: Boolean = false
 )
 
+/**
+ * A data class that represents an identity license.
+ *
+ * @param licenseNumber The license number.
+ */
 data class IdentityLicense(
     val licenseNumber: String = "",
     val auditNumber: String = "",
