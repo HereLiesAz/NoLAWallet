@@ -23,7 +23,6 @@ object Routes {
 }
 
 @Composable
-@Composable
 fun NolaNavigation(viewModelFactory: androidx.lifecycle.ViewModelProvider.Factory) {
     val navController = rememberNavController()
     // Use the factory to get the repository-backed ViewModel

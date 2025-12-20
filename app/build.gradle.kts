@@ -78,4 +78,6 @@ dependencies {
     
     // Coroutines Guava (needed to interop with ML Kit's Tasks)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3")
+    implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 }
