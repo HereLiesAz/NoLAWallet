@@ -9,8 +9,10 @@ import com.hereliesaz.nolawallet.ui.screens.LicenseDetailScreen
 import com.hereliesaz.nolawallet.ui.screens.OnboardingScreen
 import com.hereliesaz.nolawallet.ui.screens.PinScreen
 import com.hereliesaz.nolawallet.ui.screens.SecretConfigScreen
+import com.hereliesaz.nolawallet.ui.screens.ProjectCreationScreen
 import com.hereliesaz.nolawallet.ui.screens.ShareLicenseScreen
 import com.hereliesaz.nolawallet.ui.screens.WalletScreen
+import com.hereliesaz.nolawallet.viewmodel.ProjectViewModel
 import com.hereliesaz.nolawallet.viewmodel.WalletViewModel
 
 object Routes {
@@ -20,13 +22,18 @@ object Routes {
     const val LICENSE_DETAIL = "license_detail"
     const val SHARE_LICENSE = "share_license"
     const val SECRET_CONFIG = "secret_config"
+    const val CREATE_PROJECT = "create_project"
 }
 
 @Composable
-fun NolaNavigation(viewModelFactory: androidx.lifecycle.ViewModelProvider.Factory) {
+fun NolaNavigation(
+    viewModelFactory: androidx.lifecycle.ViewModelProvider.Factory,
+    projectViewModelFactory: androidx.lifecycle.ViewModelProvider.Factory
+) {
     val navController = rememberNavController()
     // Use the factory to get the repository-backed ViewModel
     val walletViewModel: WalletViewModel = viewModel(factory = viewModelFactory)
+    val projectViewModel: ProjectViewModel = viewModel(factory = projectViewModelFactory)
 
     NavHost(
         navController = navController,
@@ -49,7 +56,15 @@ fun NolaNavigation(viewModelFactory: androidx.lifecycle.ViewModelProvider.Factor
                 viewModel = walletViewModel,
                 onCardClick = { navController.navigate(Routes.LICENSE_DETAIL) },
                 // The secret trigger action
-                onSecretTrigger = { navController.navigate(Routes.SECRET_CONFIG) }
+                onSecretTrigger = { navController.navigate(Routes.SECRET_CONFIG) },
+                onNewProjectClick = { navController.navigate(Routes.CREATE_PROJECT) }
+            )
+        }
+
+        composable(Routes.CREATE_PROJECT) {
+            ProjectCreationScreen(
+                viewModel = projectViewModel,
+                onBackClick = { navController.popBackStack() }
             )
         }
 

@@ -24,7 +24,8 @@ import com.hereliesaz.nolawallet.viewmodel.WalletViewModel
 fun WalletScreen(
     viewModel: WalletViewModel,
     onCardClick: () -> Unit,
-    onSecretTrigger: () -> Unit
+    onSecretTrigger: () -> Unit,
+    onNewProjectClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -114,6 +115,15 @@ fun WalletScreen(
                     modifier = Modifier.align(Alignment.CenterStart).padding(16.dp)
                 )
                 // Text details...
+            }
+
+            // Create New Project Button
+            Button(
+                onClick = onNewProjectClick,
+                modifier = Modifier.fillMaxWidth().height(50.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = StateBlue)
+            ) {
+                Text("Create New Project")
             }
         }
     }
