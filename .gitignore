@@ -1,3 +1,7 @@
 
 # IDEaz Secrets
 **/utils/Secrets.kt
+
+# Gradle
+.gradle/
+build/
