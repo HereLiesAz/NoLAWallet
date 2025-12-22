@@ -13,15 +13,41 @@ import com.hereliesaz.nolawallet.ui.screens.ShareLicenseScreen
 import com.hereliesaz.nolawallet.ui.screens.WalletScreen
 import com.hereliesaz.nolawallet.viewmodel.WalletViewModel
 
+/**
+ * A sealed class that contains the routes for the application.
+ */
 object Routes {
+    /**
+     * The route for the onboarding screen.
+     */
     const val ONBOARDING = "onboarding"
+    /**
+     * The route for the PIN entry screen.
+     */
     const val PIN_ENTRY = "pin_entry"
+    /**
+     * The route for the wallet screen.
+     */
     const val WALLET = "wallet"
+    /**
+     * The route for the license detail screen.
+     */
     const val LICENSE_DETAIL = "license_detail"
+    /**
+     * The route for the share license screen.
+     */
     const val SHARE_LICENSE = "share_license"
+    /**
+     * The route for the secret config screen.
+     */
     const val SECRET_CONFIG = "secret_config"
 }
 
+/**
+ * The navigation graph for the application.
+ *
+ * @param viewModelFactory The ViewModel factory.
+ */
 @Composable
 fun NolaNavigation(viewModelFactory: androidx.lifecycle.ViewModelProvider.Factory) {
     val navController = rememberNavController()

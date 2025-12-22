@@ -10,7 +10,19 @@ import com.hereliesaz.nolawallet.ui.theme.NOLAWalletTheme
 import com.hereliesaz.nolawallet.viewmodel.WalletViewModel
 import com.hereliesaz.nolawallet.viewmodel.WalletViewModelFactory
 
+/**
+ * The main activity of the application.
+ *
+ * This activity is the entry point of the application. It sets up the UI and the ViewModel.
+ */
 class MainActivity : ComponentActivity() {
+    /**
+     * Called when the activity is first created.
+     *
+     * This method sets up the UI and the ViewModel.
+     *
+     * @param savedInstanceState The saved instance state.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         

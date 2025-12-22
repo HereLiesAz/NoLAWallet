@@ -11,8 +11,16 @@ import com.hereliesaz.nolawallet.data.LicenseRepository
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+/**
+ * The ViewModel for the wallet screen.
+ *
+ * @param repository The license repository.
+ */
 class WalletViewModel(private val repository: LicenseRepository) : ViewModel() {
 
+    /**
+     * The license data.
+     */
     var licenseData by mutableStateOf(IdentityLicense())
         private set
 
@@ -25,6 +33,11 @@ class WalletViewModel(private val repository: LicenseRepository) : ViewModel() {
         }
     }
 
+    /**
+     * Updates the license data.
+     *
+     * @param newData The new license data.
+     */
     fun updateLicense(newData: IdentityLicense) {
         // Update local state immediately for UI responsiveness
         licenseData = newData
@@ -35,8 +48,18 @@ class WalletViewModel(private val repository: LicenseRepository) : ViewModel() {
     }
 }
 
-// Factory to inject the repository without Dagger/Hilt complexity
+/**
+ * A factory for creating [WalletViewModel] instances.
+ *
+ * @param repository The license repository.
+ */
 class WalletViewModelFactory(private val repository: LicenseRepository) : ViewModelProvider.Factory {
+    /**
+     * Creates a new instance of the [WalletViewModel].
+     *
+     * @param modelClass The class of the ViewModel.
+     * @return The new instance of the [WalletViewModel].
+     */
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(WalletViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
